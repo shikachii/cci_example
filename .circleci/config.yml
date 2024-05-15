@@ -20,7 +20,7 @@ jobs:
 					git config --global user.name $GITHUB_NAME
 			- add_ssh_keys:
 				fingerprints:
-					- ""
+					- "SHA256:ABSYFODGofRwZGdANftTOZLgJBQXGP4dpM5Mn315yFg"
 			- run:
 				name: Deploy to gh-pages branch
 				command: npm run deploy:gh-pages
@@ -28,4 +28,8 @@ jobs:
 workflows:
   build:
     jobs:
-      - build-and-deploy
+      - build-and-deploy:
+				filters:
+					branches:
+						only: "main"
+
