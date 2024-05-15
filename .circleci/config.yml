@@ -14,22 +14,22 @@ jobs:
       - run:
           command: npm run build
       - run:
-        name: Configure Git
-        command: |
-          git config --global user.email $GITHUB_EMAIL
-          git config --global user.name $GITHUB_NAME
+          name: Configure Git
+          command: |
+            git config --global user.email $GITHUB_EMAIL
+            git config --global user.name $GITHUB_NAME
       - add_ssh_keys:
-        fingerprints:
-         - "SHA256:ABSYFODGofRwZGdANftTOZLgJBQXGP4dpM5Mn315yFg"
+          fingerprints:
+            - "SHA256:ABSYFODGofRwZGdANftTOZLgJBQXGP4dpM5Mn315yFg"
       - run:
-        name: Deploy to gh-pages branch
-        command: npm run deploy:gh-pages
+          name: Deploy to gh-pages branch
+          command: npm run deploy:gh-pages
 
 workflows:
   build:
     jobs:
       - build-and-deploy:
-        filters:
-          branches:
-            only: "main"
+          filters:
+            branches:
+              only: "main"
 
