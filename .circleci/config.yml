@@ -4,7 +4,7 @@ version: 2.1
 orbs:
   node: circleci/node@5
 jobs:
-  build-node:
+  build-and-deploy:
     # Build node project
     executor: node/default
     steps:
@@ -13,29 +13,19 @@ jobs:
           pkg-manager: npm
       - run:
           command: npm run build
-      - run:
-          name: Create the ~/artifacts directory if it doesn't exist
-          command: mkdir -p ~/artifacts
-      # Copy output to artifacts dir
-      - run:
-          name: Copy artifacts
-          command: cp -R build dist public .output .next .docusaurus ~/artifacts 2>/dev/null || true
-      - store_artifacts:
-          path: ~/artifacts
-          destination: node-build
-  deploy:
-    # This is an example deploy job, not actually used by the workflow
-    docker:
-      - image: cimg/base:stable
-    steps:
-      # Replace this with steps to deploy to users
-      - run:
-          name: deploy
-          command: '#e.g. ./deploy.sh'
+			- run:
+				name: Configure Git
+				command: |
+					git config --global user.email $GITHUB_EMAIL
+					git config --global user.name $GITHUB_NAME
+			- add_ssh_keys:
+				fingerprints:
+					- ""
+			- run:
+				name: Deploy to gh-pages branch
+				command: npm run deploy:gh-pages
+
 workflows:
   build:
     jobs:
-      - build-node
-    # - deploy:
-    #     requires:
-    #       - build-node
+      - build-and-deploy
