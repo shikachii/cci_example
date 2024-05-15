@@ -1,0 +1,35 @@
+# This config was automatically generated from your source code
+# Stacks detected: deps:node:.
+version: 2.1
+orbs:
+  node: circleci/node@5
+jobs:
+  build-and-deploy:
+    # Build node project
+    executor: node/default
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: npm
+      - run:
+          command: npm run build
+      - run:
+          name: Configure Git
+          command: |
+            git config --global user.email $GITHUB_EMAIL
+            git config --global user.name $GITHUB_NAME
+      - add_ssh_keys:
+          fingerprints:
+            - "SHA256:ABSYFODGofRwZGdANftTOZLgJBQXGP4dpM5Mn315yFg"
+      - run:
+          name: Deploy to gh-pages branch
+          command: npm run deploy:gh-pages
+
+workflows:
+  build:
+    jobs:
+      - build-and-deploy:
+          filters:
+            branches:
+              only: "main"
+
